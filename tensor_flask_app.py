@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World from flask! Seriously though, this is just a placeholder'
+    return render_template('index.html')
 
-app.run(host='0.0.0.0', debug = True)
+app.run(host='127.0.0.1', debug = True)
