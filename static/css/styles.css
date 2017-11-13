@@ -1,15 +1,8 @@
-#canvas{
+#numCanvas{
     background-color: #FFFFFF;
     border: 1px solid #434343;
 }
 
-.btn .btn-submit{
-    color: #008000;
-    background-color: #ffd700;
-    float: right;
-}
-.tbn .btn-clear{
-    color: #ffd700;
-    background-color: #008000;
-    float: left;
+#mainContent{
+    background-color: #a5a5a5;
 }
