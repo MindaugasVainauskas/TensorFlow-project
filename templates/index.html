@@ -7,9 +7,34 @@
 
   <!-- Latest compiled and minified Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-</head>
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <!-- Using fabric.js library to enable free drawing of numbers in the canvas -->
+  <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js'></script>
+     <script type='text/javascript'>
 
+        var canvas;
+        function initCanvas(){
+            canvas = new fabric.Canvas('numCanvas');
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.width = 7;
+            canvas.freeDrawingBrush.color = "#000";
+        }
+        window.onload=function(){
+           initCanvas();
+        }
+
+        function reset() {
+        var m = confirm("Do you want to clear current number?");
+        if (m) {
+            canvas.clear();
+        }
+    }
+    </script>
+    
+  <!-- <script type="text/javascript" href="/static/js/scripts.js"></script> -->
+</head>
 <body>
+    
     <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -17,8 +42,23 @@
           </div>
         </div>
       </nav>
-  <div class="jumbotron">
-      <p>Well Hello there! This is index page!</p>
+  <div id="mainContent" class="jumbotron">
+      <div class="container col-md-12">
+          <div class="row">     
+              <div class="col-md-4"></div>       
+            <div class="col-md-4">
+                <canvas id="numCanvas" width="400" height="400"></canvas>
+                <img id="canvasimg">               
+            </div>            
+        </div> 
+        <div class="row">
+            <div class="actions col-md-4 col-md-offset-5">
+                <button id="sub-btn" class="btn btn-primary col-s-3">Submit</button>
+                <button class="btn btn-primary col-s-3 col-md-offset-1" onclick="reset()">Reset</button>
+            </div>    
+        </div>        
+    </div>
   </div>
+  
 </body>
 </html>
