@@ -13,24 +13,35 @@
      <script type='text/javascript'>
 
         var canvas;
+        //Initialize the canvas element from fabric library
         function initCanvas(){
             canvas = new fabric.Canvas('numCanvas');
             canvas.isDrawingMode = true;
             canvas.freeDrawingBrush.width = 7;
             canvas.freeDrawingBrush.color = "#000";
         }
-        window.onload=function(){
-           initCanvas();
-        }
-
+        //load initialization as window loads
+        window.onload = function(){
+            initCanvas();
+        };
+        
+        //reset canvas if user wants to delete current content
         function reset() {
-        var m = confirm("Do you want to clear current number?");
-        if (m) {
-            canvas.clear();
+            var m = confirm("Do you want to clear current number?");
+            if (m) {
+                canvas.clear();
+            }       
         }
-    }
+        //save current image as .png file
+       
+        document.getElementById('btnSave').addEventListener('click', function() {
+            
+            this.href = document.getElementById('numCanvas').toDataURL();
+            this.download = 'image.png';
+            }, false
+        );
     </script>
-    
+    <!-- Will ned to move above js code into own file later -->
   <!-- <script type="text/javascript" href="/static/js/scripts.js"></script> -->
 </head>
 <body>
@@ -53,7 +64,7 @@
         </div> 
         <div class="row">
             <div class="actions col-md-4 col-md-offset-5">
-                <button id="sub-btn" class="btn btn-primary col-s-3">Submit</button>
+                <button id="btnSave" class="btn btn-primary col-s-3">Submit</button>
                 <button class="btn btn-primary col-s-3 col-md-offset-1" onclick="reset()">Reset</button>
             </div>    
         </div>        
