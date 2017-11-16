@@ -16,11 +16,14 @@ def get_image(): #need to process data url coming from image
     image_string = request.values['imageBase64']
     # Line below cuts of first part of response string to only leave base 64 byte array for further processing
     image_b64 = re.sub('^data:image/png;base64,', '', image_string)
-    print(image_b64)
-    image_bin = base64.decodebytes(image_b64.encode('utf-8'))
-    print('Image url converted to binary:')
-    print('========= binary byte array ============')
-    print(image_bin)    
+    # Converting the base64 array to bytes
+    image_bin = base64.decodebytes(image_b64.encode('ascii'))
+    image_arr = np.fromstring(image_bin, dtype='>u4')
+    print(image_bin)
+    # Convert the binary array to image
+    # image = np.asarray(image_bin)
+    # image = Image.fromarray(image.astype('uint8'), 'RGB')
+    # print(image)
     return ''
 
 app.run(host='127.0.0.1', debug=True)
