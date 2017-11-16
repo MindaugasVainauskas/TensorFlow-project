@@ -54,7 +54,6 @@
         function handleImage(){                        
             var imgURL = canvas.toDataURL();
             image.src = imgURL;
-           console.log(imgURL);
            $.ajax({
                type: 'post',
                url: '/',
