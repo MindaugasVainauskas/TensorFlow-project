@@ -10,11 +10,18 @@
   <link rel="stylesheet" href="static/css/styles.css" />
   <!-- Using fabric.js library to enable free drawing of numbers in the canvas -->
   <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js'></script>
+  <!-- Going to use JQuery so its good to have library locally -->
+  <script type='text/javascript' src="static/js/jquery-3.2.1.min.js"></script>
      <script type='text/javascript'>
 
+        //Declaration of variables that I will be using across functions
         var canvas;
+        var image;
+        var emptyImgURL;
         //setting variables for bruh thickness and colour so it is more modular.
-        var bThick = 9;
+        //thickness of brush
+        var bThick = 10;
+        //colour of brush
         var cColour = '#000000';
         //Initialize the canvas element from fabric library
         function initCanvas(){
@@ -23,10 +30,16 @@
             canvas.freeDrawingBrush.width = bThick;
             canvas.freeDrawingBrush.color = cColour;
             canvas.backgroundColor = '#FFFFFF';
+
+            image = document.getElementById('cvImage');
+            
         }
         //load initialization as window loads
         window.onload = function(){
             initCanvas();
+            //find and add click event to the submit button
+            var btnsub = document.getElementById('btnSubmit');
+            btnsub.addEventListener('click', handleImage());
         };
         
         //reset canvas if user wants to delete current content
@@ -34,15 +47,21 @@
             var m = confirm("Do you want to clear current number?");
             if (m) {
                 canvas.clear();
+                document.getElementById('cvImage').removeAttribute('src');
             }       
         }
 
-        function saveImage(){
+        function handleImage(){                        
             var imgURL = canvas.toDataURL();
-            var img = document.createElement('a');
-            img.href = imgURL;
-            img.download= '/image.png';
-            img.click();
+            image.src = imgURL;
+           console.log(imgURL);
+           $.ajax({
+               type: 'post',
+               url: '/',
+               data: {
+                   imageBase64 : imgURL
+               }               
+           });           
         }
     </script>
     <!-- Will ned to move above js code into own file later -->
@@ -66,15 +85,19 @@
             </div>   
             <div class="col-xs-4">
                 <div id="results">
-                        <h3>Your drawn number was...</h3>
-                        <img id="canvasImg" width="280" height="280">  
+                        <h3>Your drawn number was...</h3>					    
+                        <img id="cvImage" width="28" height="28">                       									
+                </div>
+                <div id="numGuess">
+                    <h3>Number is...</h3>
+                    <h4>{{guessNum}}</h4>
                 </div>
             </div>         
         </div> 
-        <div class="row col-xs-12">
+        <div class="row col-xs-12"style="padding-top:20px">
             <div class="actions">
                 <div class="col-xs-1"></div>
-                <button class="btn btn-primary col-xs-1" onclick="saveImage()">Submit</button>
+                <button id="btnSubmit" class="btn btn-primary col-xs-1" onclick="handleImage()">Submit</button>
                 <button class="btn btn-primary col-xs-1 col-xs-offset-1" onclick="reset()">Reset</button>
             </div>    
         </div>        
