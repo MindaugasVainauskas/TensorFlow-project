@@ -1,13 +1,8 @@
 #numCanvas{
     background-color: #FFFFFF;
     border: 1px solid #434343;
-    padding: 20px 20px;
 }
 
 #mainContent{
     background-color: #a5a5a5;
-}
-
-#btnSave{
-    width: 100px;
 }
