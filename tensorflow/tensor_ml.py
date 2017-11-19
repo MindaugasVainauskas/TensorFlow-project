@@ -3,8 +3,6 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot = True)
 
-
-
 x = tf.placeholder(tf.float32, [None, 784])
 y_ce = tf.placeholder(tf.float32, [None, 10])
 
@@ -20,6 +18,9 @@ train_step = tf.train.GradientDescentOptimizer(0.4).minimize(cross_entropy)
 
 sess = tf.InteractiveSession()
 
+#Set up saver to save model once its ready
+save_session = tf.train.Saver()
+
 tf.global_variables_initializer().run()
 
 for _ in range(1000):
@@ -30,4 +31,6 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_ce, 1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+# Save session in temp folder with given path
+save_model = save_session.save(sess, "/tmp/tensor_model.ckpt")
 print(sess.run([accuracy], feed_dict={x: mnist.test.images, y_ce: mnist.test.labels}))
