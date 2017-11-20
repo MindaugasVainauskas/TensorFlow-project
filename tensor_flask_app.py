@@ -8,7 +8,6 @@ import tensor_ml
 
 app = Flask(__name__)
 
-x = tf.placeholder(tf.float32, shape=[None, 784])
 
 @app.route('/')
 def hello_world():
@@ -24,15 +23,31 @@ def get_image(): #need to process data url coming from image
     image_bytes = io.BytesIO(base64.b64decode(image_string))  # Convert it to bytes array
     image = Image.open(image_bytes)  # Make it to PIL image
     image = image.resize(img_size, Image.ANTIALIAS)  # Resize the image to 28x28 size for use with tensorflow
-    image_array = np.array(image)[:,:,0]
-   # image.show()  # Display image
+    image = image.convert('L')
+    image_array = np.array(image)
+    image_array = image_array.reshape(784)
+    image_tensor = tf.convert_to_tensor(image_array, np.float32)
 
+    
+    x = tf.placeholder(tf.float32, shape=[None, 784])
+    y_ = tf.placeholder(tf.float32, shape=[None, 10])
+    W = tf.Variable(tf.zeros([784, 10]))
+    b = tf.Variable(tf.zeros([10]))
+
+    # Implement regression model
+    y = tf.matmul(x,W)+b
     # Restore tensorflow session
     sess = tf.Session()
+    sess.run(tf.global_variables_initializer())
     saver = tf.train.import_meta_graph('tmp/tensor_model.meta')
-    saver.restore(sess, 'tmp/tensor_model')
+    saver.restore(sess, tf.train.latest_checkpoint('tmp/'))
 
-    predicted_number = sess.run(feed_dict={x: image_array})
+    # Evaluate the model accuracy
+    correct_pred = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+
+    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+    predict_number = tf.argmax(y, 1)
+    predicted_number = predict_number.eval(feed_dict={x: [image_tensor]}, session=sess)
     print(predicted_number)
     return ''
 

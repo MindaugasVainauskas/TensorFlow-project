@@ -17,10 +17,9 @@
         //Declaration of variables that I will be using across functions
         var canvas;
         var image;
-        var emptyImgURL;
         //setting variables for bruh thickness and colour so it is more modular.
         //thickness of brush
-        var bThick = 12;
+        var bThick = 15;
         //colour of brush
         var cColour = '#000000';
         //Initialize the canvas element from fabric library
@@ -53,14 +52,14 @@
 
         function handleImage(){                        
             var imgURL = canvas.toDataURL();
-            image.src = imgURL;
-           $.ajax({
-               type: 'post',
-               url: '/',
-               data: {
-                   imageBase64 : imgURL
-               }               
-           });           
+            image.src = imgURL;          
+            $.ajax({
+                type: 'post',
+                url: '/',
+                data: {
+                    imageBase64 : imgURL
+                }               
+            });                     
         }
     </script>
     <!-- Will ned to move above js code into own file later -->
