@@ -2,7 +2,13 @@ from flask import Flask, render_template, url_for, request
 import numpy as np
 import base64, io, re
 from PIL import Image
+import tensorflow as tf
+
+import tensor_ml
+
 app = Flask(__name__)
+
+x = tf.placeholder(tf.float32, shape=[None, 784])
 
 @app.route('/')
 def hello_world():
@@ -18,8 +24,16 @@ def get_image(): #need to process data url coming from image
     image_bytes = io.BytesIO(base64.b64decode(image_string))  # Convert it to bytes array
     image = Image.open(image_bytes)  # Make it to PIL image
     image = image.resize(img_size, Image.ANTIALIAS)  # Resize the image to 28x28 size for use with tensorflow
-   ## array = np.array(image)[:,:,0]
-    image.show()  # Display image
+    image_array = np.array(image)[:,:,0]
+   # image.show()  # Display image
+
+    # Restore tensorflow session
+    sess = tf.Session()
+    saver = tf.train.import_meta_graph('tmp/tensor_model.meta')
+    saver.restore(sess, 'tmp/tensor_model')
+
+    predicted_number = sess.run(feed_dict={x: image_array})
+    print(predicted_number)
     return ''
 
 app.run(host='127.0.0.1', debug=True)
