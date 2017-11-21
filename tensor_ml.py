@@ -28,7 +28,7 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 
 # IMplement regression model
-y = tf.matmul(x,W)+b
+y = tf.nn.softmax(tf.matmul(x,W)+b)
 
 # Set cost of prediction
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))

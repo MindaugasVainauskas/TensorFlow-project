@@ -4,18 +4,19 @@ import base64, io, re
 from PIL import Image
 import tensorflow as tf
 
-import tensor_ml
+import tensor_ml as ten
 
 app = Flask(__name__)
 
+guessNum = 0
 
 @app.route('/')
 def hello_world():
-    return render_template('index.html')
+    return render_template('index.html', guessNum = guessNum)
 
 # Processing the drawn image using adaptation of code from:
 # https://www.reddit.com/r/learnpython/comments/6lqsrp/converting_a_dataurl_to_numpy_array/
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', 'GET'])
 def get_image(): #need to process data url coming from image
     img_size = 28, 28  # Size that will be neded for the application to process image
     image_url = request.values['imageBase64']  # Get the dataUrl from page
@@ -25,30 +26,19 @@ def get_image(): #need to process data url coming from image
     image = image.resize(img_size, Image.ANTIALIAS)  # Resize the image to 28x28 size for use with tensorflow
     image = image.convert('L')
     image_array = np.array(image)
-    image_array = image_array.reshape(784)
-    image_tensor = tf.convert_to_tensor(image_array, np.float32)
+    image_array = image_array.flatten()
 
-    
-    x = tf.placeholder(tf.float32, shape=[None, 784])
-    y_ = tf.placeholder(tf.float32, shape=[None, 10])
-    W = tf.Variable(tf.zeros([784, 10]))
-    b = tf.Variable(tf.zeros([10]))
+    # # Restore tensorflow session
+    with tf.Session() as sess:
+        saver = tf.train.import_meta_graph('tmp/tensor_model.meta')
+        saver.restore(sess, tf.train.latest_checkpoint('tmp/'))
 
-    # Implement regression model
-    y = tf.matmul(x,W)+b
-    # Restore tensorflow session
-    sess = tf.Session()
-    sess.run(tf.global_variables_initializer())
-    saver = tf.train.import_meta_graph('tmp/tensor_model.meta')
-    saver.restore(sess, tf.train.latest_checkpoint('tmp/'))
+        predict_number = tf.argmax(ten.y, 1)
+        predicted_number = ten.sess.run([predict_number], feed_dict={ten.x: [image_array]})
+        guessNum = predicted_number[0][0]
+        guessNum = int(guessNum)
+        print(guessNum)
 
-    # Evaluate the model accuracy
-    correct_pred = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-
-    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-    predict_number = tf.argmax(y, 1)
-    predicted_number = predict_number.eval(feed_dict={x: [image_tensor]}, session=sess)
-    print(predicted_number)
-    return ''
+    return render_template('index.html', guessNum = guessNum)
 
 app.run(host='127.0.0.1', debug=True)
