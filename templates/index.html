@@ -23,7 +23,6 @@
         //colour of brush
         var cColour = '#000000';
 
-        var number = document.getElementById('guessNum')
         //Initialize the canvas element from fabric library
         function initCanvas(){
             canvas = new fabric.Canvas('numCanvas');
@@ -42,21 +41,22 @@
         
         //reset canvas if user wants to delete current content
         function reset() {           
-            canvas.clear();    
-            $('#guessNum').text('');     
+            canvas.clear();    //Clear canvas
+            $('#guessNum').text('');     //Clear current guessed number
         }
 
+        //Function to handle the image. Send it to back end and return result
         function handleImage(){                        
-            var imgURL = canvas.toDataURL();     
+            var imgURL = canvas.toDataURL();     //Get canvas data URL
+            //Send dataURL to flask server for processing via Ajax call
             $.ajax({
                 type: 'post',
                 url: '/',
                 data: {
                     imageBase64 : imgURL
                 },
+                //On successful call return data from back end and replace it in the page
                 success: function(data){
-                    console.log('data should come back');
-                    console.log(data);
                     $('#guessNum').text(data.guessNum);
                 }              
             });                     
@@ -70,7 +70,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-              <p class="navbar-text">TensorFlow in Action</p>            
+              <p class="navbar-text">TensorFlow in Action. Project by Mindaugas Vainauskas GMIT-2017/2018</p>            
           </div>
         </div>
       </nav>
@@ -83,8 +83,9 @@
             </div>   
             <div class="col-xs-4">               
                 <div>
+                    <!-- Result is shown in this H1 element -->
                         <h3>Number is...</h3>                    
-                        <h4 id="guessNum"></h4>
+                        <h1 id="guessNum"></h1>
                   </div>
             </div>         
         </div> 
