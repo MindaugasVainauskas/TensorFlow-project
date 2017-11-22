@@ -9,6 +9,10 @@ __pycache__/
 # Extensions
 .gz
 
+# Files inside tmp folder and mnist data
+tmp
+MNIST_data
+
 # Distribution / packaging
 .Python
 env/
