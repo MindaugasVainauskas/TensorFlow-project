@@ -22,6 +22,8 @@
         var bThick = 25;
         //colour of brush
         var cColour = '#000000';
+
+        var number = document.getElementById('guessNum')
         //Initialize the canvas element from fabric library
         function initCanvas(){
             canvas = new fabric.Canvas('numCanvas');
@@ -40,7 +42,8 @@
         
         //reset canvas if user wants to delete current content
         function reset() {           
-            canvas.clear();         
+            canvas.clear();    
+            $('#guessNum').text('');     
         }
 
         function handleImage(){                        
@@ -50,7 +53,12 @@
                 url: '/',
                 data: {
                     imageBase64 : imgURL
-                }               
+                },
+                success: function(data){
+                    console.log('data should come back');
+                    console.log(data);
+                    $('#guessNum').text(data.guessNum);
+                }              
             });                     
         }
     </script>
@@ -75,11 +83,9 @@
             </div>   
             <div class="col-xs-4">               
                 <div>
-                    <form action="/" method="get">
                         <h3>Number is...</h3>                    
-                        <h4 id="num">{{ guessNum }}</h4>
-                    </form>
-                </div>
+                        <h4 id="guessNum"></h4>
+                  </div>
             </div>         
         </div> 
         <div class="row col-xs-12"style="padding-top:20px">
