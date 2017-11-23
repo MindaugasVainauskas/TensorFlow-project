@@ -35,11 +35,11 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_
 
 
 # Set training step size
-train_step = tf.train.GradientDescentOptimizer(0.35).minimize(cross_entropy)
+train_step = tf.train.GradientDescentOptimizer(0.6).minimize(cross_entropy)
 
 # Train the model
-for _ in range(3000):
-	batch = mnist.train.next_batch(100)
+for _ in range(10000):
+	batch = mnist.train.next_batch(64)  #Batch size of 64 for now.
 	train_step.run(feed_dict={x: batch[0], y_: batch[1]})
 	
 # Evaluate the model accuracy

@@ -20,10 +20,9 @@ def get_image(): #need to process data url coming from image
         image_bytes = io.BytesIO(base64.b64decode(image_string))  # Convert it to bytes array
         image = Image.open(image_bytes)  # Make it to PIL image
         image = image.resize(img_size, Image.ANTIALIAS)  # Resize the image to 28x28 size for use with tensorflow
-        image = image.convert('L')
-        image_array = np.array(image)
+        image = image.convert('1')  # Change image to black/white. I found it worked better for me than Grayscale.
+        image_array = np.asarray(image)
         image_array = image_array.flatten()  # Transform array into size (1, 784)
-
         # # Restore tensorflow session
         with tf.Session() as sess:
             saver = tf.train.import_meta_graph('tmp/tensor_model.meta')
